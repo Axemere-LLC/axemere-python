@@ -1,7 +1,6 @@
 """Tests for _generate() upstream provider error surfacing."""
 
-import json
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
