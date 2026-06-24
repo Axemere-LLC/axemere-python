@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "axemere-gateway-openai"
+version = "0.1.0"
+description = "Axemere AI Gateway OpenAI SDK wrapper — drop-in OpenAI/AzureOpenAI subclasses"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "axemere-gateway>=0.1.0",
+    "openai>=1.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/axemere"]

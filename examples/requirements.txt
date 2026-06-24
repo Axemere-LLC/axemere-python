@@ -1,0 +1,19 @@
+-e ../sdk/python-core
+-e ../sdk/python
+-e ../sdk/python-openai
+-e ../sdk/python-anthropic
+-e ../sdk/python-http
+-e ../sdk/python-google-genai
+-e ../sdk/python-llamaindex
+langchain>=0.3.0
+langchain-openai>=0.2.0
+langchain-anthropic>=0.2.0
+langchain-community>=0.3.0
+langgraph>=0.2.0
+langchain-text-splitters>=0.3.0
+faiss-cpu>=1.7.0
+python-dotenv>=1.0.0
+google-genai>=1.0
+llama-index-core>=0.11.0
+instructor>=1.0.0
+cryptography>=42.0
