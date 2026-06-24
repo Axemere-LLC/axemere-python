@@ -77,3 +77,39 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: packages/axemere-gateway-anthropic/dist/
+
+  publish-gateway-google:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi-gateway-google
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build packages/axemere-gateway-google/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/axemere-gateway-google/dist/
+
+  publish-gateway-langchain:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi-gateway-langchain
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build packages/axemere-gateway-langchain/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/axemere-gateway-langchain/dist/
