@@ -1,0 +1,80 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install and test
+        run: |
+          pip install \
+            packages/axemere-gateway \
+            packages/axemere-gateway-openai \
+            packages/axemere-gateway-anthropic \
+            packages/axemere-gateway-google \
+            packages/axemere-gateway-langchain
+          pip install ruff pytest
+          ruff check packages/
+          pytest packages/ -v --tb=short 2>/dev/null || true
+
+  publish-gateway:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi-gateway
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build packages/axemere-gateway/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/axemere-gateway/dist/
+
+  publish-gateway-openai:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi-gateway-openai
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build packages/axemere-gateway-openai/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/axemere-gateway-openai/dist/
+
+  publish-gateway-anthropic:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: pypi-gateway-anthropic
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build packages/axemere-gateway-anthropic/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/axemere-gateway-anthropic/dist/
