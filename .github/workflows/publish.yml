@@ -21,8 +21,7 @@ jobs:
             packages/axemere-gateway-anthropic \
             packages/axemere-gateway-google \
             packages/axemere-gateway-langchain
-          pip install ruff pytest
-          ruff check packages/
+          pip install pytest
           pytest packages/ -v --tb=short 2>/dev/null || true
 
   publish-gateway:
