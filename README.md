@@ -48,9 +48,9 @@ No other code changes needed. Every request is now governed, costed, and recorde
 
 ## Get a gateway
 
-- **Free tier** — self-hosted, single user, no account required. [Install →](https://axemere.ai/docs/guides/install)
-- **Self-Hosted** — team features, policy engine, full audit ledger. [Docs →](https://axemere.ai/docs)
-- **Managed** — fully hosted, multi-tenant, SOC 2 ready. [Sign up →](https://axemere.ai)
+- **Free tier** — self-hosted, single user, no account required. [Install →](https://axemere.ai/docs/free-gateway)
+- **Self-Hosted** — team features, policy engine, full audit ledger. [Get started →](https://axemere.ai/docs/get-started/cp-connected)
+- **Managed** — fully hosted, multi-tenant, SOC 2 ready. [Get started →](https://axemere.ai/docs/get-started/managed-gateway)
 
 ## Examples
 
