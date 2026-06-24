@@ -1,5 +1,7 @@
 # axemere-gateway
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
+
 Framework-independent Python client for the [Axemere AI Gateway](https://axemere.ai).
 
 Use this package when you want explicit control over every request, or when you are not using OpenAI, Anthropic, or another supported SDK. If you are already using one of those SDKs, install the matching drop-in wrapper instead (`axemere-gateway-openai`, `axemere-gateway-anthropic`, etc.) — it requires no code changes beyond the import.

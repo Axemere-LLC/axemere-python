@@ -1,5 +1,7 @@
 # Axemere AI Gateway — Python Examples
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../LICENSE)
+
 Twenty examples covering the gateway's core capabilities plus Python-ecosystem integrations. Each runs standalone against a local or managed gateway.
 
 ## Setup

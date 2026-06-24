@@ -1,5 +1,7 @@
 # axemere-gateway-langchain
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
+
 LangChain `BaseChatModel` integration for the [Axemere AI Gateway](https://axemere.ai). Drop `ChatAiGateway` into any LangChain chain or agent — the gateway adds cost controls, policy enforcement, and an append-only audit ledger to every call.
 
 ## Install

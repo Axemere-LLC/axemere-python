@@ -1,5 +1,7 @@
 # axemere-gateway-anthropic
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
+
 Drop-in replacement for the Anthropic Python SDK that routes every request through the [Axemere AI Gateway](https://axemere.ai).
 
 Change one import — all existing Anthropic code works unchanged. The gateway adds cost controls, policy enforcement, and an append-only audit ledger to every call.

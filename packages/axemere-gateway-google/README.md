@@ -1,5 +1,7 @@
 # axemere-gateway-google
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../LICENSE)
+
 Google Gemini client factory for the [Axemere AI Gateway](https://axemere.ai). Routes `google-genai` requests through the gateway with cost controls, policy enforcement, and an append-only audit ledger.
 
 ## Install
