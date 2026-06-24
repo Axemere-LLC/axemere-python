@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import uuid
-from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence, Union
+from typing import Any, Dict, Iterator, List, Literal, Optional, Sequence
 
 import httpx
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
