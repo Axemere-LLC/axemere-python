@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "axemere-gateway-anthropic"
-version = "0.1.5"
+version = "0.1.6"
 description = "Axemere AI Gateway Anthropic SDK wrapper — drop-in Anthropic/AsyncAnthropic subclasses"
 readme = "README.md"
 requires-python = ">=3.10"

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "axemere-gateway"
-version = "0.1.5"
+version = "0.1.6"
 description = "Axemere AI Gateway Python SDK — framework-independent async client"
 readme = "README.md"
 requires-python = ">=3.10"
