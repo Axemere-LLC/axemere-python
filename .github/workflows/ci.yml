@@ -31,4 +31,4 @@ jobs:
       - name: Test
         run: |
           pip install pytest
-          pytest packages/ -v --tb=short --ignore=packages/axemere-gateway-llamaindex 2>/dev/null || true
+          pytest packages/ -v --tb=short

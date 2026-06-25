@@ -7,7 +7,7 @@ name = "axemere-gateway"
 version = "0.1.0"
 description = "Axemere AI Gateway Python SDK — framework-independent async client"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 dependencies = [
     "httpx>=0.27.0",

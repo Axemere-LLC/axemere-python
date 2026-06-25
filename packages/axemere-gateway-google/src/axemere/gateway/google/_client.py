@@ -43,6 +43,14 @@ def genai_client(
     try:
         client._api_client._http_options.headers.pop("x-goog-api-key", None)
     except AttributeError:
-        pass
+        import warnings
+
+        warnings.warn(
+            "Could not strip x-goog-api-key from google-genai client headers. "
+            "The placeholder API key may be forwarded. Update axemere-gateway-google "
+            "if google-genai changed its API.",
+            RuntimeWarning,
+            stacklevel=3,
+        )
 
     return client

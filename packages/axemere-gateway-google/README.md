@@ -15,7 +15,7 @@ pip install axemere-gateway-google
 ```python
 from axemere.gateway.google import genai_client
 
-client = genai_client()  # reads AXEMERE_GATEWAY_URL + AXEMERE_WORKLOAD_TOKEN
+client = genai_client()  # reads AXEMERE_GATEWAY_URL + AXEMERE_GATEWAY_TOKEN
 response = client.models.generate_content(
     model="gemini-2.0-flash",
     contents="Hello",
@@ -28,7 +28,7 @@ print(response.text)
 | Env var | Description |
 |---------|-------------|
 | `AXEMERE_GATEWAY_URL` | Gateway base URL, e.g. `http://localhost:7080` |
-| `AXEMERE_WORKLOAD_TOKEN` | Workload token issued by the gateway |
+| `AXEMERE_GATEWAY_TOKEN` | Bearer token issued by the gateway |
 
 ## Links
 

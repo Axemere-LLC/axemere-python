@@ -293,8 +293,6 @@ class AiGatewayClient:
 
     @staticmethod
     def _parse_response(resp: httpx.Response, *, provider: str) -> ExecuteResponse:
-        import json as _json
-
         try:
             data = resp.json()
         except Exception as exc:
@@ -303,7 +301,10 @@ class AiGatewayClient:
                 status_code=resp.status_code,
             ) from exc
 
-        decision = data.get("decision", "deny")
+        # Default to "allow" when the gateway omits a decision: an explicit
+        # policy denial always sets decision="deny" (or returns HTTP 403), so a
+        # missing field means a normal response, not a silent deny.
+        decision = data.get("decision", "allow")
         if decision == "deny" or resp.status_code == 403:
             trace = data.get("decision_trace", {})
             reason = trace.get("reason") or data.get("reason") or "Policy denied the request"

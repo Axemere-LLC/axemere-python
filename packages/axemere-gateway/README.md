@@ -17,16 +17,18 @@ pip install axemere-gateway
 ```python
 from axemere.gateway import AiGatewayClient, AiGatewayConfig
 
-config = AiGatewayConfig()  # reads AXEMERE_GATEWAY_URL + AXEMERE_WORKLOAD_TOKEN
+config = AiGatewayConfig()  # reads AXEMERE_GATEWAY_URL + AXEMERE_GATEWAY_TOKEN
 client = AiGatewayClient(config)
 
-result = client.execute(
+# execute() is async; execute_sync() is the synchronous entry point.
+result = client.execute_sync(
     provider="openai",
     model="gpt-4o-mini",
     messages=[{"role": "user", "content": "Hello"}],
 )
 print(result.content)
-print(result.metering.cost_usd)  # "$0.000042"
+if result.metering:
+    print(result.metering.cost_usd)  # float USD, e.g. 0.000042
 ```
 
 ## Configuration
@@ -34,7 +36,7 @@ print(result.metering.cost_usd)  # "$0.000042"
 | Env var | Description |
 |---------|-------------|
 | `AXEMERE_GATEWAY_URL` | Gateway base URL, e.g. `http://localhost:7080` |
-| `AXEMERE_WORKLOAD_TOKEN` | Workload token issued by the gateway |
+| `AXEMERE_GATEWAY_TOKEN` | Bearer token issued by the gateway (legacy `AXEMERE_WORKLOAD_TOKEN` still accepted) |
 | `AXEMERE_WORKLOAD_ID` | Workload identifier for attribution |
 | `AXEMERE_PROJECT_ID` | Project identifier for spend grouping |
 

@@ -487,7 +487,10 @@ class ChatAiGateway(BaseChatModel):
                 f"Invalid JSON from gateway (status={response.status_code}): {exc}"
             ) from exc
 
-        decision = data.get("decision", "deny")
+        # Default to "allow" when the gateway omits a decision: an explicit
+        # policy denial always sets decision="deny" (or returns HTTP 403), so a
+        # missing field means a normal response, not a silent deny.
+        decision = data.get("decision", "allow")
 
         if decision == "deny" or response.status_code == 403:
             trace = data.get("decision_trace", {})

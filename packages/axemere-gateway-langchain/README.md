@@ -16,7 +16,7 @@ pip install axemere-gateway-langchain
 from axemere.gateway.langchain import ChatAiGateway
 
 llm = ChatAiGateway(provider="openai", model="gpt-4o-mini")
-# reads AXEMERE_GATEWAY_URL + AXEMERE_WORKLOAD_TOKEN from env
+# reads AXEMERE_GATEWAY_URL + AXEMERE_GATEWAY_TOKEN from env
 
 response = llm.invoke("Hello")
 print(response.content)
@@ -29,7 +29,7 @@ Works anywhere a LangChain `BaseChatModel` is accepted — chains, agents, LCEL 
 | Env var | Description |
 |---------|-------------|
 | `AXEMERE_GATEWAY_URL` | Gateway base URL, e.g. `http://localhost:7080` |
-| `AXEMERE_WORKLOAD_TOKEN` | Workload token issued by the gateway |
+| `AXEMERE_GATEWAY_TOKEN` | Bearer token issued by the gateway |
 
 ## Links
 

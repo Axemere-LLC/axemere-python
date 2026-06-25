@@ -37,7 +37,7 @@ pip install axemere-gateway-openai
 ```python
 from axemere.gateway.openai import OpenAI
 
-client = OpenAI()  # reads AXEMERE_GATEWAY_URL + AXEMERE_WORKLOAD_TOKEN
+client = OpenAI()  # reads AXEMERE_GATEWAY_URL + AXEMERE_GATEWAY_TOKEN
 
 response = client.chat.completions.create(
     model="gpt-4o-mini",
@@ -68,7 +68,7 @@ python run_all.py
 
 - Python 3.10+
 - A running Axemere AI Gateway (`AXEMERE_GATEWAY_URL`)
-- A workload token (`AXEMERE_WORKLOAD_TOKEN`)
+- A gateway token (`AXEMERE_GATEWAY_TOKEN`)
 
 ## Links
 

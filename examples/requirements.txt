@@ -1,10 +1,8 @@
--e ../sdk/python-core
--e ../sdk/python
--e ../sdk/python-openai
--e ../sdk/python-anthropic
--e ../sdk/python-http
--e ../sdk/python-google-genai
--e ../sdk/python-llamaindex
+-e ../packages/axemere-gateway
+-e ../packages/axemere-gateway-openai
+-e ../packages/axemere-gateway-anthropic
+-e ../packages/axemere-gateway-google
+-e ../packages/axemere-gateway-langchain
 langchain>=0.3.0
 langchain-openai>=0.2.0
 langchain-anthropic>=0.2.0

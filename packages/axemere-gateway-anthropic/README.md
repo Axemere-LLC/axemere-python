@@ -21,7 +21,7 @@ from anthropic import Anthropic
 # After — one line change
 from axemere.gateway.anthropic import Anthropic
 
-client = Anthropic()  # reads AXEMERE_GATEWAY_URL + AXEMERE_WORKLOAD_TOKEN
+client = Anthropic()  # reads AXEMERE_GATEWAY_URL + AXEMERE_GATEWAY_TOKEN
 message = client.messages.create(
     model="claude-sonnet-4-6",
     max_tokens=256,
@@ -37,7 +37,7 @@ Streaming and async (`AsyncAnthropic`) are both supported.
 | Env var | Description |
 |---------|-------------|
 | `AXEMERE_GATEWAY_URL` | Gateway base URL, e.g. `http://localhost:7080` |
-| `AXEMERE_WORKLOAD_TOKEN` | Workload token issued by the gateway |
+| `AXEMERE_GATEWAY_TOKEN` | Bearer token issued by the gateway |
 
 ## Links
 
