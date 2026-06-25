@@ -186,3 +186,27 @@ def test_execute_sync_success_returns_content():
         )
     assert result.content == "hello there"
     assert result.record_id == "rec_1"
+
+
+# ---------------------------------------------------------------------------
+# Provider host routing
+# ---------------------------------------------------------------------------
+
+
+def test_provider_hosts_correct_for_non_standard_providers():
+    """Providers that don't follow the api.{name}.com pattern must have explicit entries."""
+    from axemere.gateway._client import _PROVIDER_HOSTS
+
+    cases = {
+        "nvidia-nim": "integrate.api.nvidia.com",
+        "openrouter": "openrouter.ai",
+        "upstage": "api.upstage.ai",
+        "moonshot": "api.moonshot.ai",
+        "minimax": "api.minimax.chat",
+        "zhipu": "api.z.ai",
+    }
+    for provider, expected_host in cases.items():
+        assert _PROVIDER_HOSTS.get(provider) == expected_host, (
+            f"provider {provider!r}: expected host {expected_host!r}, "
+            f"got {_PROVIDER_HOSTS.get(provider)!r}"
+        )

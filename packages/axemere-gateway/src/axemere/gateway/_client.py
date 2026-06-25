@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import uuid
 from typing import Any, AsyncIterator, Dict, List, Optional
 
@@ -36,7 +37,14 @@ _PROVIDER_HOSTS: Dict[str, str] = {
     "perplexity": "api.perplexity.ai",
     "deepseek": "api.deepseek.com",
     "xai": "api.x.ai",
+    "openrouter": "openrouter.ai",
+    "nvidia-nim": "integrate.api.nvidia.com",
+    "upstage": "api.upstage.ai",
+    "moonshot": "api.moonshot.ai",
+    "minimax": "api.minimax.chat",
+    "zhipu": "api.z.ai",
     "azure": "openai.azure.com",
+    "azure_openai": "openai.azure.com",
     "bedrock": "bedrock.us-east-1.amazonaws.com",
     "vertex": "us-central1-aiplatform.googleapis.com",
     "replicate": "api.replicate.com",
@@ -138,7 +146,7 @@ class AiGatewayClient:
         """Stream a chat completion from the gateway (SSE).
 
         Yields :class:`StreamChunk` objects. The final chunk has
-        ``is_final=True`` and may include ``metering`` and ``record_id``.
+        ``is_final=True`` and carries ``metering`` and ``record_id``.
         """
         payload = self._build_payload(
             provider=provider,
@@ -151,6 +159,9 @@ class AiGatewayClient:
         )
         headers = self._build_headers()
         url = f"{self._config.gateway_url}/v1/actions:execute"
+
+        metering: Optional[Metering] = None
+        record_id: str = ""
 
         async with httpx.AsyncClient(timeout=float(self._config.timeout)) as client:
             async with client.stream("POST", url, json=payload, headers=headers) as resp:
@@ -167,15 +178,50 @@ class AiGatewayClient:
                         continue
                     data = line[5:].strip()
                     if data == "[DONE]":
-                        yield StreamChunk(content="", is_final=True)
+                        yield StreamChunk(content="", is_final=True, record_id=record_id, metering=metering)
                         return
-                    import json
                     try:
                         chunk = json.loads(data)
                     except Exception:
                         continue
-                    content = self._extract_content(chunk, provider=provider)
-                    yield StreamChunk(content=content)
+
+                    chunk_type = chunk.get("type", "")
+
+                    if chunk_type == "mvgc_metering":
+                        record_id = chunk.get("record_id", "")
+                        metering = self._parse_metering(chunk.get("metering"))
+                        continue
+
+                    # Anthropic end-of-stream signal
+                    if chunk_type == "message_stop":
+                        yield StreamChunk(content="", is_final=True, record_id=record_id, metering=metering)
+                        return
+
+                    # Anthropic streaming delta
+                    if chunk_type == "content_block_delta":
+                        delta = chunk.get("delta", {})
+                        if isinstance(delta, dict) and delta.get("type") == "text_delta":
+                            text = delta.get("text", "")
+                            if text:
+                                yield StreamChunk(content=text)
+                        continue
+
+                    # OpenAI-compatible streaming delta
+                    choices = chunk.get("choices")
+                    if choices and isinstance(choices, list):
+                        choice = choices[0] if choices else {}
+                        if isinstance(choice, dict):
+                            delta = choice.get("delta", {})
+                            content = delta.get("content", "") if isinstance(delta, dict) else ""
+                            finish_reason = choice.get("finish_reason")
+                            if content:
+                                yield StreamChunk(content=content)
+                            if finish_reason and finish_reason != "null":
+                                yield StreamChunk(content="", is_final=True, record_id=record_id, metering=metering)
+                                return
+
+        # Stream closed without an explicit terminator
+        yield StreamChunk(content="", is_final=True, record_id=record_id, metering=metering)
 
     def execute_sync(
         self,
@@ -204,6 +250,90 @@ class AiGatewayClient:
                 **extra_params,
             )
         )
+
+    async def stream(
+        self,
+        *,
+        provider: str,
+        model: str,
+        messages: List[Dict[str, Any]],
+        max_tokens: int = 1024,
+        temperature: Optional[float] = None,
+        system: Optional[str] = None,
+        **extra_params: Any,
+    ) -> AsyncIterator[StreamChunk]:
+        """Stream a chat completion through the gateway.
+
+        Returns an async iterator of :class:`StreamChunk` objects. The final
+        chunk has ``is_final=True`` and carries ``metering`` and ``record_id``.
+
+        Example::
+
+            async for chunk in await client.stream(provider="anthropic", model="...", messages=[...]):
+                if not chunk.is_final:
+                    print(chunk.content, end="", flush=True)
+
+        Args:
+            provider: Provider name (e.g. ``"anthropic"``, ``"openai"``).
+            model: Model identifier.
+            messages: List of chat messages in OpenAI format.
+            max_tokens: Maximum tokens to generate.
+            temperature: Sampling temperature. Omitted if ``None``.
+            system: System prompt.
+            **extra_params: Additional parameters forwarded to the provider.
+
+        Returns:
+            An async iterator of :class:`StreamChunk` objects.
+
+        Raises:
+            PolicyDeniedError: The request was denied by policy.
+            GatewayError: On network failure or non-OK gateway status.
+        """
+        return self._stream(
+            provider=provider,
+            model=model,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            system=system,
+            **extra_params,
+        )
+
+    def stream_sync(
+        self,
+        *,
+        provider: str,
+        model: str,
+        messages: List[Dict[str, Any]],
+        max_tokens: int = 1024,
+        temperature: Optional[float] = None,
+        system: Optional[str] = None,
+        **extra_params: Any,
+    ) -> List[StreamChunk]:
+        """Synchronous wrapper around :meth:`stream`.
+
+        Collects all chunks and returns them as a list. Do not call inside an
+        already-running async context — use ``async for chunk in await stream()`` there.
+
+        Returns:
+            A list of :class:`StreamChunk` objects; the last entry has ``is_final=True``.
+
+        Raises:
+            PolicyDeniedError: The request was denied by policy.
+            GatewayError: On network failure or non-OK gateway status.
+        """
+        async def _collect() -> List[StreamChunk]:
+            return [chunk async for chunk in self._stream(
+                provider=provider,
+                model=model,
+                messages=messages,
+                max_tokens=max_tokens,
+                temperature=temperature,
+                system=system,
+                **extra_params,
+            )]
+
+        return asyncio.run(_collect())
 
     # ------------------------------------------------------------------
     # Private helpers
